@@ -15,6 +15,7 @@ const commentSchema = new mongoose.Schema ({
 
 const hootSchema = new mongoose.Schema({
     title: {
+        type: String,
         required: true,
     },
     text: {
@@ -35,3 +36,7 @@ const hootSchema = new mongoose.Schema({
 // register these onto the object
 { timestamps: true }
 );
+
+const Hoot = mongoose.model("Hoot", hootSchema);
+
+module.exports = Hoot;
