@@ -57,6 +57,7 @@ router.get('/:hootId', verifyToken, async (req, res) => {
 
 });
 
+// PUT /:hootId
 router.put('/:hootId', verifyToken, async (req, res) => {
 
     try {
@@ -94,8 +95,28 @@ router.put('/:hootId', verifyToken, async (req, res) => {
 
 });
 
+//DELETE /hoots/:hootId
+router.delete('/:hootId', verifyToken, async (req, res) => {
+// First, we’ll retrieve the hoot we want to delete from the database. We’ll do this using our Hoot model’s findById() method.
+// With our retrieved hoot, we need check that this user has permission to delete the resource. We accomplish this using an if condition, comparing the hoot.author to _id of the user issuing the request (req.user._id)
+// Remember, hoot.author contains the ObjectId of the user who created the hoot. If these values do not match, we respond with a 403 Forbidden status.
+// If the user has permission to delete the resource, we call upon our Hoot model’s findByIdAndDelete() method.
+// The findByIdAndDelete() accepts an ObjectId (req.params.hootId), used to locate the hoot we wish to remove from the database.
+    try {
+        const hoot = await Hoot.findById(req.params.hootId);
 
+        if (!hoot.author.equals(req.user._id)) {
+            return res.status(403).send('You are not allowed to delete this.');
+        }
 
+        const deletedHoot = await Hoot.findByIdAndDelete(req.params.hootId);
+        res.status(200).json(deletedHoot);
+
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+    
+});
 
 
 
