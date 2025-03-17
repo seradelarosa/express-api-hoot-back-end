@@ -43,6 +43,19 @@ router.get('/', verifyToken, async (req, res) => {
 });
 
 
+// GET /hoots/:hootId
+router.get('/:hootId', verifyToken, async (req, res) => {
+    try {
+        // call on the Hoot model's findById() method 
+        // pass in req.params.hootId
+        // call populate() to populate the author property
+        const hoot = await Hoot.findById(req.params.hootId).populate('author');
+        res.status(200).json(hoot);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 
 
 
